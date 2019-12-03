@@ -117,7 +117,8 @@ implements MouseListener, MouseMotionListener, KeyListener {
     public void start()
     {
          addMouseListener( this );       
-          addMouseMotionListener( this );  
+          addMouseMotionListener( this ); 
+          addKeyListener(this);
           size = Toolkit.getDefaultToolkit().getScreenSize();
           setVisible( true );
           setDefaultCloseOperation(EXIT_ON_CLOSE);
