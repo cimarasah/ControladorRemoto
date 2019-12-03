@@ -9,6 +9,8 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import rmi.RemoteAccess;
 
@@ -19,34 +21,13 @@ public class Main {
 		//System.setSecurityManager(new RMISecurityManager());
 		
 		try {
-			TelaIP ip = new TelaIP();
-			ip.setSize(640,480);
-		    ip.setVisible(true);
-			RemoteAccess obj = (RemoteAccess) Naming
-					.lookup("rmi://10.61.5.82/RemoteControler");
-			
-			String token = obj.logIn("12345");
-			
-			System.out.println("Token: " + token);
-			
-			obj.moveMouse(token, 500, 500);
-			
-	
-			byte screenshot[] = obj.getScreenshot(token);
-			
-			TelaControladorRemoto s = new TelaControladorRemoto(screenshot, obj, token);
-			s.setVisible(true);
-			s.start();
-			
-			for(;;){
-				screenshot = obj.getScreenshot(token);
-				s.update(screenshot);
-			}
-	
+			//TelaIP telaIp = new TelaIP();
+			ConexaoRMI.Conectar("10.61.5.203"); 
 			 
 		} catch (Exception e) {
 			System.out.println("RemoteControler erro" + e.getMessage());
 		}
 	}
 }
+
 

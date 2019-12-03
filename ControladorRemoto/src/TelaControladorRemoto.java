@@ -1,5 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -10,7 +13,7 @@ import javax.swing.JLabel;
 import rmi.RemoteAccess;
 
 public class TelaControladorRemoto extends javax.swing.JFrame 
-implements MouseListener, MouseMotionListener {
+implements MouseListener, MouseMotionListener, KeyListener {
 	/**
 	 * 
 	 */
@@ -18,6 +21,7 @@ implements MouseListener, MouseMotionListener {
 	private String token ;
 	double altReal, largReal, altJan, largJan;
 	Dimension size;
+	
 	
 	private static final long serialVersionUID = -1842261777470977698L;
 
@@ -37,7 +41,6 @@ implements MouseListener, MouseMotionListener {
 			altReal = obj.getHeightResolution(token);
 			largReal = obj.getWidthResolution(token);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -52,37 +55,44 @@ implements MouseListener, MouseMotionListener {
 	public JLabel mousePosition;
     @Override
     public void mouseClicked(MouseEvent e) {
-       // mousePosition.setText("Mouse clicado na coordenada : ["+e.getX()+","+e.getY()+"]");
-          
+    	
     }
   
     @Override
     public void mouseEntered(MouseEvent e) {
-        //mousePosition.setText("Coordenada atual do mouse : ["+e.getX()+","+e.getY()+"]");
           
     }
   
     @Override
     public void mouseExited(MouseEvent e) {
-       // mousePosition.setText("O Mouse está fora da janela de acesso");
           
     }
   
     @Override
     public void mousePressed(MouseEvent e) {
-       // mousePosition.setText("Mouse pressionado nas coordenadas : ["+e.getX()+","+e.getY()+"]");
+        try {
+		obj.pressMouse(token, InputEvent.getMaskForButton(e.getButton()));
+	} catch (RemoteException e1) {
+		e1.printStackTrace();
+	}
+     System.out.println("Mouse foi pressionado na coordenada : ["+e.getX()+","+e.getY()+"]"); 
           
     }
   
     @Override
     public void mouseReleased(MouseEvent e) {
-       // mousePosition.setText("Coordenada atual do mouse : ["+e.getX()+","+e.getY()+"]");
-          
+    	try {
+	    		obj.releaseMouse(token, InputEvent.getMaskForButton(e.getButton()));
+	    	} catch (RemoteException e1) {
+	    		e1.printStackTrace();
+	    	}
+	         System.out.println("Mouse foi largado na coordenada : ["+e.getX()+","+e.getY()+"]"); 
+	          
     }
   
     @Override
     public void mouseDragged(MouseEvent e) {
-        //mousePosition.setText("Mouse arrastado nas coordenadas : ["+e.getX()+","+e.getY()+"]");
+       
           
     }
     public int coordRealAlt(int coordJanela) {
@@ -95,35 +105,47 @@ implements MouseListener, MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         
         try {
-        	System.out.println("______________________________________");
-        	System.out.println("___ Resul. Real: "+altReal+" X "+largReal+"     ____");
-        	System.out.println("____Resul. janela:   "+altJan+" X "+largJan+"     ____");
-        	System.out.println("____Coordenada Janela:  "+ e.getY() +"  X  "+e.getX()+"  ____");
-        	System.out.println("____Coordenada real:  "+coordRealLarg(e.getX())+" X "+coordRealAlt(e.getY())+"        ____");
-        	System.out.println("______________________________________");
 			obj.moveMouse(token,coordRealLarg(e.getX()), coordRealAlt(e.getY())
 					
 					);
 		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-          
+        System.out.println("Mouse está sendo movido na coordenada : ["+e.getX()+","+e.getY()+"]"); 
     }
   
     public void start()
     {
-       // mousePosition=new JLabel();
-         addMouseListener( this );        // listens for own mouse and
-          addMouseMotionListener( this );  // mouse-motion events
-         // setLayout(new FlowLayout(1));
-         // add(mousePosition);
+         addMouseListener( this );       
+          addMouseMotionListener( this );  
           size = Toolkit.getDefaultToolkit().getScreenSize();
-          //setSize(size );
-          setUndecorated(true);
           setVisible( true );
           setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		try {
+    		obj.pressKey(token, e.getKeyCode());
+    	} catch (RemoteException e1) {
+    		e1.printStackTrace();
+    	}
+        // System.out.println("Mouse foi largado na coordenada : ["+e.getX()+","+e.getY()+"]"); 
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		try {
+    		obj.releaseKey(token, e.getKeyCode());
+    	} catch (RemoteException e1) {
+    		e1.printStackTrace();
+    	}
+		
+	}
 	
 	
 }
