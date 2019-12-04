@@ -12,27 +12,20 @@ public class ConexaoRMI {
 		try {
 			obj = (RemoteAccess) Naming
 					.lookup("rmi://"+IP+"/RemoteControler");
-		
-		
-		String token = obj.logIn("12345");
-		
-		System.out.println("Token: " + token);
-		
-		obj.moveMouse(token, 500, 500);
-		
+			String token = obj.logIn("12345");
+			System.out.println("Token: " + token);
+			obj.moveMouse(token, 500, 500);
+			byte screenshot[] = obj.getScreenshot(token);
 
-		byte screenshot[] = obj.getScreenshot(token);
-		
-		TelaControladorRemoto s = new TelaControladorRemoto(screenshot, obj, token);
-		s.setVisible(true);
-		s.start();
-		
-		for(;;){
-			screenshot = obj.getScreenshot(token);
-			s.update(screenshot); 
-		}
+			TelaControladorRemoto s = new TelaControladorRemoto(screenshot, obj, token);
+			s.setVisible(true);
+			s.start();
+
+			for(;;){
+				screenshot = obj.getScreenshot(token);
+				s.update(screenshot); 
+			}
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

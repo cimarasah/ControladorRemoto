@@ -18,11 +18,9 @@ import rmi.RemoteAccess;
 public class Main {
 
 	public static void main(String[] args) throws RemoteException {
-		//System.setSecurityManager(new RMISecurityManager());
 		
 		try {
-			//TelaIP telaIp = new TelaIP();
-			ConexaoRMI.Conectar("10.61.5.203"); 
+			ConexaoRMI.Conectar("192.168.215.2"); 
 			 
 		} catch (Exception e) {
 			System.out.println("RemoteControler erro" + e.getMessage());
